@@ -11,6 +11,7 @@ import AVFoundation
 
 class PlaySoundsViewController: UIViewController {
     
+    //All the buttons
     @IBOutlet weak var snailButton: UIButton!
     @IBOutlet weak var chipmunkButton: UIButton!
     @IBOutlet weak var rabbitButton: UIButton!
@@ -19,6 +20,14 @@ class PlaySoundsViewController: UIViewController {
     @IBOutlet weak var reverbButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
     
+    //UI design containers
+    @IBOutlet weak var OuterStackView: UIStackView!
+    @IBOutlet weak var innerStackView1: UIStackView!
+    @IBOutlet weak var innerStackView2: UIStackView!
+    @IBOutlet weak var innerStackView3: UIStackView!
+    @IBOutlet weak var innerStackView4: UIStackView!
+    
+    //Audio-related vars
     var recordedAudioURL: NSURL!
     var audioFile: AVAudioFile!
     var audioEngine: AVAudioEngine!
@@ -68,23 +77,34 @@ class PlaySoundsViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         configureUI(.NotPlaying)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+/* BEGIN udacity forums ui fix */
+    
+    // helper function: all the innerStackView should share the same style, configure them together
+    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
+        self.innerStackView1.axis = axisStyle
+        self.innerStackView2.axis = axisStyle
+        self.innerStackView3.axis = axisStyle
+        self.innerStackView4.axis = axisStyle
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // override this function to make sure when rotated to landscape, the buttons are not squeezed
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animateAlongsideTransition({ (context) -> Void in
+            let orientation = UIApplication.sharedApplication().statusBarOrientation
+            
+            if orientation.isPortrait{
+                self.OuterStackView.axis = .Vertical
+                self.setInnerStackViewsAxis(.Horizontal)
+            } else {
+                self.OuterStackView.axis = .Horizontal
+                self.setInnerStackViewsAxis(.Vertical)
+            }
+            }, completion: nil)
     }
-    */
+/* END udacity forums ui fix */
 
 }

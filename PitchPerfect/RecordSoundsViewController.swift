@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  RecordSoundsViewController.swift
 //  PitchPerfect
 //
 //  Created by Forrest Ching on 7/20/16.
@@ -11,25 +11,37 @@ import AVFoundation
 
 class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
 
+    //All the buttons
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var stopRecordingButton: UIButton!
     @IBOutlet weak var recordingLabel: UIButton!
     
+    //UI Stack Views
+    @IBOutlet weak var outerStackView: UIStackView!
+    
     var audioRecorder:AVAudioRecorder!
     
-    override func viewDidLoad() {
-
+    /*
+     STILL NEED TO FIX THIS!!
+    */
+    /* BEGIN udacity forums ui fix */
+    
+    // override this function to make sure when rotated to landscape, the buttons are not squeezed
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animateAlongsideTransition({ (context) -> Void in
+            let orientation = UIApplication.sharedApplication().statusBarOrientation
+            
+            if orientation.isPortrait{
+                self.outerStackView.axis = .Vertical
+            } else {
+                self.outerStackView.axis = .Horizontal
+            }
+            }, completion: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    /* END udacity forums ui fix */
+    
 
     @IBAction func recordAudio(sender: AnyObject) {
-        //Caveman Debug
-            print("'Record Brah!' pressed")
-        
         //Change UI
             recordingLabel.setTitle("Recording In Progress", forState: UIControlState.Normal)
             stopRecordingButton.enabled = true
@@ -52,8 +64,6 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     }
     
     @IBAction func stopRecording(sender: AnyObject) {
-        //Caveman Debug
-            print("'Stop Recording' pressed")
         
         //Change UI
             recordingLabel.setTitle("Tap To Record", forState: UIControlState.Normal)
@@ -67,6 +77,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         stopRecordingButton.enabled = false
     }
     
@@ -76,7 +87,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
         
         //If success, segue.  Else print error
             if(flag){
-                self.performSegueWithIdentifier("stopRecording", sender: audioRecorder.url)
+                performSegueWithIdentifier("stopRecording", sender: audioRecorder.url)
             }
             else {
                 print("Saving of recording failed")
