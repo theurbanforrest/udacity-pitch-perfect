@@ -18,13 +18,18 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     
     //UI Stack Views
     @IBOutlet weak var outerStackView: UIStackView!
+    @IBOutlet weak var innerStackView1: UIStackView!
+    @IBOutlet weak var innerStackView2: UIStackView!
     
     var audioRecorder:AVAudioRecorder!
     
-    /*
-     STILL NEED TO FIX THIS!!
-    */
-    /* BEGIN udacity forums ui fix */
+    /* BEGIN udacity forums ui fix
+    
+    // helper function: all the innerStackView should share the same style, configure them together
+    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
+        self.innerStackView1.axis = axisStyle
+        self.innerStackView2.axis = axisStyle
+    }
     
     // override this function to make sure when rotated to landscape, the buttons are not squeezed
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -33,17 +38,19 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
             
             if orientation.isPortrait{
                 self.outerStackView.axis = .Vertical
+                self.setInnerStackViewsAxis(.Horizontal)
             } else {
                 self.outerStackView.axis = .Horizontal
+                self.setInnerStackViewsAxis(.Vertical)
             }
             }, completion: nil)
     }
-    /* END udacity forums ui fix */
+    END udacity forums ui fix*/
     
 
     @IBAction func recordAudio(sender: AnyObject) {
         //Change UI
-            recordingLabel.setTitle("Recording In Progress", forState: UIControlState.Normal)
+            recordingLabel.setTitle("Recording In Progress - Tap Stop to Stop", forState: UIControlState.Normal)
             stopRecordingButton.enabled = true
             recordButton.enabled = false
 
@@ -66,7 +73,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     @IBAction func stopRecording(sender: AnyObject) {
         
         //Change UI
-            recordingLabel.setTitle("Tap To Record", forState: UIControlState.Normal)
+            recordingLabel.setTitle("Tap Mic to Record", forState: UIControlState.Normal)
             stopRecordingButton.enabled = false
             recordButton.enabled = true
         
@@ -82,9 +89,6 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     }
     
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
-        //Caveman Debug
-            print("AVAudioRecorder finished saving recording")
-        
         //If success, segue.  Else print error
             if(flag){
                 performSegueWithIdentifier("stopRecording", sender: audioRecorder.url)
