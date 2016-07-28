@@ -18,17 +18,20 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     
     //UI Stack Views
     @IBOutlet weak var outerStackView: UIStackView!
-    @IBOutlet weak var innerStackView1: UIStackView!
-    @IBOutlet weak var innerStackView2: UIStackView!
+    @IBOutlet weak var innerStackView: UIStackView!
+    
+    //UI Stack Views
+    //@IBOutlet weak var outerStackView: UIStackView!
+    //@IBOutlet weak var innerStackView1: UIStackView!
+    //@IBOutlet weak var innerStackView2: UIStackView!
     
     var audioRecorder:AVAudioRecorder!
     
-    /* BEGIN udacity forums ui fix
+    /* BEGIN udacity forums ui fix */
     
     // helper function: all the innerStackView should share the same style, configure them together
     func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
-        self.innerStackView1.axis = axisStyle
-        self.innerStackView2.axis = axisStyle
+        self.innerStackView.axis = axisStyle
     }
     
     // override this function to make sure when rotated to landscape, the buttons are not squeezed
@@ -45,7 +48,8 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
             }
             }, completion: nil)
     }
-    END udacity forums ui fix*/
+    /* END udacity forums ui fix */
+ 
     
 
     @IBAction func recordAudio(sender: AnyObject) {
