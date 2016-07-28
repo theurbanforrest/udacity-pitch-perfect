@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  RecordSoundsViewController.swift
 //  PitchPerfect
 //
 //  Created by Forrest Ching on 7/20/16.
@@ -11,27 +11,75 @@ import AVFoundation
 
 class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
 
+    /******** VARIABLES ********/
+    //All the buttons
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var stopRecordingButton: UIButton!
     @IBOutlet weak var recordingLabel: UIButton!
     
+    //UI Stack Views
+    @IBOutlet weak var outerStackView: UIStackView!
+    @IBOutlet weak var innerStackView1: UIStackView!
+    @IBOutlet weak var innerStackView2: UIStackView!
+    
+    //Audio
     var audioRecorder:AVAudioRecorder!
     
+
+    /******** OVERRIDE FUNCS **********/
+    
     override func viewDidLoad() {
-
+        super.viewDidLoad()
+        setStackViewLayout()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        stopRecordingButton.enabled = false
     }
-
-    @IBAction func recordAudio(sender: AnyObject) {
-        //Caveman Debug
-            print("'Record Brah!' pressed")
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if(segue.identifier == "stopRecording"){
+            let playSoundsVC = segue.destinationViewController as! PlaySoundsViewController
+            let recordedAudioURL = sender as! NSURL
+            playSoundsVC.recordedAudioURL = recordedAudioURL
+        }
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animateAlongsideTransition({ (context) -> Void in
+            
+            self.setStackViewLayout()
+            
+            }, completion: nil)
+    }
+    
+    /******** HELPER FUNCS ********/
+    
+    /*** UI ***/
+    
+    func setStackViewLayout() {
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
         
+        if orientation.isPortrait{
+            self.outerStackView.axis = .Vertical
+            self.setInnerStackViewsAxis(.Horizontal)
+        } else {
+            self.outerStackView.axis = .Horizontal
+            self.setInnerStackViewsAxis(.Vertical)
+        }
+    }
+
+    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
+        self.innerStackView1.axis = axisStyle
+        self.innerStackView2.axis = axisStyle
+    }
+    
+    /*** AUDIO ***/
+    
+    @IBAction func recordAudio(sender: AnyObject) {
         //Change UI
-            recordingLabel.setTitle("Recording In Progress", forState: UIControlState.Normal)
+            recordingLabel.setTitle("Recording In Progress - Tap Stop to Stop", forState: UIControlState.Normal)
             stopRecordingButton.enabled = true
             recordButton.enabled = false
 
@@ -52,11 +100,9 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     }
     
     @IBAction func stopRecording(sender: AnyObject) {
-        //Caveman Debug
-            print("'Stop Recording' pressed")
         
         //Change UI
-            recordingLabel.setTitle("Tap To Record", forState: UIControlState.Normal)
+            recordingLabel.setTitle("Tap Mic to Record", forState: UIControlState.Normal)
             stopRecordingButton.enabled = false
             recordButton.enabled = true
         
@@ -66,29 +112,14 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
             try! audioSession.setActive(false)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        stopRecordingButton.enabled = false
-    }
-    
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
-        //Caveman Debug
-            print("AVAudioRecorder finished saving recording")
-        
         //If success, segue.  Else print error
             if(flag){
-                self.performSegueWithIdentifier("stopRecording", sender: audioRecorder.url)
+                performSegueWithIdentifier("stopRecording", sender: audioRecorder.url)
             }
             else {
                 print("Saving of recording failed")
             }
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if(segue.identifier == "stopRecording"){
-            let playSoundsVC = segue.destinationViewController as! PlaySoundsViewController
-            let recordedAudioURL = sender as! NSURL
-            playSoundsVC.recordedAudioURL = recordedAudioURL
-        }
     }
 
 }

@@ -11,6 +11,9 @@ import AVFoundation
 
 class PlaySoundsViewController: UIViewController {
     
+    /******** VARIABLES ********/
+    
+    //All the buttons
     @IBOutlet weak var snailButton: UIButton!
     @IBOutlet weak var chipmunkButton: UIButton!
     @IBOutlet weak var rabbitButton: UIButton!
@@ -19,6 +22,15 @@ class PlaySoundsViewController: UIViewController {
     @IBOutlet weak var reverbButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
     
+    //UI design containers
+    @IBOutlet weak var OuterStackView: UIStackView!
+    @IBOutlet weak var innerStackView1: UIStackView!
+    @IBOutlet weak var innerStackView2: UIStackView!
+    @IBOutlet weak var innerStackView3: UIStackView!
+    @IBOutlet weak var innerStackView4: UIStackView!
+    
+    //Audio-related vars
+    var recordedAudio: NSURL!
     var recordedAudioURL: NSURL!
     var audioFile: AVAudioFile!
     var audioEngine: AVAudioEngine!
@@ -27,10 +39,56 @@ class PlaySoundsViewController: UIViewController {
     
     enum ButtonType: Int { case Slow = 0, Fast, Chipmunk, Vader, Echo, Reverb }
     
-    @IBAction func playSoundForButton(sender: UIButton) {
-        //Caveman Debug
-            print("Play Sound Button Pressed")
+    
+    /******** OVERRIDE FUNCS ********/
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupAudio()
+        setStackViewLayout()
         
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        configureUI(.NotPlaying)
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animateAlongsideTransition({ (context) -> Void in
+            
+            self.setStackViewLayout()
+            
+            }, completion: nil)
+    }
+    
+    
+    /******** HELPER FUNCS ********/
+    
+    /*** UI ***/
+    
+    func setStackViewLayout() {
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        
+        if orientation.isPortrait{
+            self.OuterStackView.axis = .Vertical
+            self.setInnerStackViewsAxis(.Horizontal)
+        } else {
+            self.OuterStackView.axis = .Horizontal
+            self.setInnerStackViewsAxis(.Vertical)
+        }
+    }
+    
+    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
+        self.innerStackView1.axis = axisStyle
+        self.innerStackView2.axis = axisStyle
+        self.innerStackView3.axis = axisStyle
+        self.innerStackView4.axis = axisStyle
+    }
+    
+    /*** AUDIO ***/
+    
+    @IBAction func playSoundForButton(sender: UIButton) {
         //Play the sound with a playback filter
         switch(ButtonType(rawValue: sender.tag)!) {
         case .Slow:
@@ -51,40 +109,8 @@ class PlaySoundsViewController: UIViewController {
     }
     
     @IBAction func stopButtonPressed(sender: AnyObject) {
-        //Caveman Debug
-        print("Stop Button Pressed")
-        
         //Stop the Audio
         stopAudio()
     }
-    
-    var recordedAudio: NSURL!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupAudio()
-
-        // Do any additional setup after loading the view.
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        configureUI(.NotPlaying)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
