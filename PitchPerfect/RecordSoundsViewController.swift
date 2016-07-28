@@ -21,6 +21,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     @IBOutlet weak var outerStackView: UIStackView!
     @IBOutlet weak var innerStackView1: UIStackView!
     @IBOutlet weak var innerStackView2: UIStackView!
+    @IBOutlet weak var innerStackView3: UIStackView!
     
     //Audio
     var audioRecorder:AVAudioRecorder!
@@ -30,15 +31,22 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //UI
         setStackViewLayout()
+
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //Audio
         stopRecordingButton.enabled = false
+
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        //Audio
         if(segue.identifier == "stopRecording"){
             let playSoundsVC = segue.destinationViewController as! PlaySoundsViewController
             let recordedAudioURL = sender as! NSURL
@@ -49,6 +57,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animateAlongsideTransition({ (context) -> Void in
             
+            //UI
             self.setStackViewLayout()
             
             }, completion: nil)
@@ -73,6 +82,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
         self.innerStackView1.axis = axisStyle
         self.innerStackView2.axis = axisStyle
+        self.innerStackView3.axis = axisStyle
     }
     
     /*** AUDIO ***/

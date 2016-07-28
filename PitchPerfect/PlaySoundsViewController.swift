@@ -46,12 +46,12 @@ class PlaySoundsViewController: UIViewController {
         super.viewDidLoad()
         setupAudio()
         setStackViewLayout()
-        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         configureUI(.NotPlaying)
+
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
