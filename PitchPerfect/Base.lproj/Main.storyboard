@@ -18,40 +18,46 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="JSW-u4-5ma">
-                                <rect key="frame" x="20" y="100" width="560" height="400"/>
+                            <stackView opaque="NO" contentMode="center" misplaced="YES" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JSW-u4-5ma">
+                                <rect key="frame" x="20" y="64" width="560" height="400"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="RHx-au-fCc">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="200"/>
+                                    <stackView opaque="NO" contentMode="center" misplaced="YES" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="RHx-au-fCc">
+                                        <rect key="frame" x="230" y="0.0" width="100" height="133"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVz-CH-RAe">
-                                                <rect key="frame" x="0.0" y="0.0" width="280" height="200"/>
-                                                <state key="normal" image="stopButton"/>
-                                                <connections>
-                                                    <action selector="stopRecording:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g4J-0Q-4Iw"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P3G-tU-d7l">
-                                                <rect key="frame" x="280" y="0.0" width="280" height="200"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="133"/>
                                                 <state key="normal" image="recordButton"/>
                                                 <connections>
                                                     <action selector="recordAudio:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pFU-j0-uv3"/>
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <variation key="heightClass=compact-widthClass=compact" axis="horizontal"/>
+                                        <color key="backgroundColor" red="1" green="0.5" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <variation key="heightClass=compact-widthClass=compact" axis="horizontal" distribution="fillProportionally"/>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R2O-Qv-70s">
-                                        <rect key="frame" x="0.0" y="200" width="560" height="200"/>
+                                        <rect key="frame" x="207" y="133" width="147" height="134"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GuT-li-bJM">
-                                                <rect key="frame" x="0.0" y="0.0" width="560" height="200"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="147" height="134"/>
                                                 <state key="normal" title="Tap Mic to Record">
                                                     <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                             </button>
                                         </subviews>
                                         <variation key="heightClass=compact-widthClass=compact" axis="horizontal"/>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uth-4q-RnE">
+                                        <rect key="frame" x="255" y="267" width="50" height="133"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVz-CH-RAe">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="133"/>
+                                                <state key="normal" image="stopButton"/>
+                                                <connections>
+                                                    <action selector="stopRecording:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g4J-0Q-4Iw"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
                                     </stackView>
                                 </subviews>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
@@ -69,6 +75,7 @@
                     <connections>
                         <outlet property="innerStackView1" destination="RHx-au-fCc" id="y0o-Ri-Jmr"/>
                         <outlet property="innerStackView2" destination="R2O-Qv-70s" id="Kwc-rx-JPB"/>
+                        <outlet property="innerStackView3" destination="uth-4q-RnE" id="PO5-1E-frs"/>
                         <outlet property="outerStackView" destination="JSW-u4-5ma" id="06U-xz-Bep"/>
                         <outlet property="recordButton" destination="P3G-tU-d7l" id="hnB-uZ-Hn9"/>
                         <outlet property="recordingLabel" destination="GuT-li-bJM" id="dgk-Eh-eGw"/>
