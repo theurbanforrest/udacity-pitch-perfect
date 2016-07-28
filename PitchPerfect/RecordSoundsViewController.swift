@@ -89,9 +89,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     
     @IBAction func recordAudio(sender: AnyObject) {
         //Change UI
-            recordingLabel.setTitle("Recording In Progress", forState: UIControlState.Normal)
-            stopRecordingButton.enabled = true
-            recordButton.enabled = false
+        setRecordingInProgressUI(true)
 
         //Record the sound
             let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true) [0] as String
@@ -112,9 +110,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     @IBAction func stopRecording(sender: AnyObject) {
         
         //Change UI
-            recordingLabel.setTitle("Tap to Record", forState: UIControlState.Normal)
-            stopRecordingButton.enabled = false
-            recordButton.enabled = true
+            setRecordingInProgressUI(false)
         
         //Stop the recording
             audioRecorder.stop()
@@ -128,8 +124,30 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
                 performSegueWithIdentifier("stopRecording", sender: audioRecorder.url)
             }
             else {
-                print("Saving of recording failed")
+                showAlert("Oops!" , message: "There was an error recording audio")
             }
+    }
+    
+    func setRecordingInProgressUI(isRecordingAudio: Bool) {
+        
+        if(isRecordingAudio) {
+            recordingLabel.setTitle("Recording In Progress", forState: UIControlState.Normal)
+            stopRecordingButton.enabled = true
+            recordButton.enabled = false
+        }
+        else {
+            recordingLabel.setTitle("Tap to Record", forState: UIControlState.Normal)
+            stopRecordingButton.enabled = false
+            recordButton.enabled = true
+        }
+        
+        
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 
 }
