@@ -11,6 +11,7 @@ import AVFoundation
 
 class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
 
+    /******** VARIABLES ********/
     //All the buttons
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var stopRecordingButton: UIButton!
@@ -18,40 +19,64 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     
     //UI Stack Views
     @IBOutlet weak var outerStackView: UIStackView!
-    @IBOutlet weak var innerStackView: UIStackView!
+    @IBOutlet weak var innerStackView1: UIStackView!
+    @IBOutlet weak var innerStackView2: UIStackView!
     
-    //UI Stack Views
-    //@IBOutlet weak var outerStackView: UIStackView!
-    //@IBOutlet weak var innerStackView1: UIStackView!
-    //@IBOutlet weak var innerStackView2: UIStackView!
-    
+    //Audio
     var audioRecorder:AVAudioRecorder!
     
-    /* BEGIN udacity forums ui fix */
+
+    /******** OVERRIDE FUNCS **********/
     
-    // helper function: all the innerStackView should share the same style, configure them together
-    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
-        self.innerStackView.axis = axisStyle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setStackViewLayout()
     }
     
-    // override this function to make sure when rotated to landscape, the buttons are not squeezed
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        stopRecordingButton.enabled = false
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if(segue.identifier == "stopRecording"){
+            let playSoundsVC = segue.destinationViewController as! PlaySoundsViewController
+            let recordedAudioURL = sender as! NSURL
+            playSoundsVC.recordedAudioURL = recordedAudioURL
+        }
+    }
+    
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animateAlongsideTransition({ (context) -> Void in
-            let orientation = UIApplication.sharedApplication().statusBarOrientation
             
-            if orientation.isPortrait{
-                self.outerStackView.axis = .Vertical
-                self.setInnerStackViewsAxis(.Horizontal)
-            } else {
-                self.outerStackView.axis = .Horizontal
-                self.setInnerStackViewsAxis(.Vertical)
-            }
+            self.setStackViewLayout()
+            
             }, completion: nil)
     }
-    /* END udacity forums ui fix */
- 
     
+    /******** HELPER FUNCS ********/
+    
+    /*** UI ***/
+    
+    func setStackViewLayout() {
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        
+        if orientation.isPortrait{
+            self.outerStackView.axis = .Vertical
+            self.setInnerStackViewsAxis(.Horizontal)
+        } else {
+            self.outerStackView.axis = .Horizontal
+            self.setInnerStackViewsAxis(.Vertical)
+        }
+    }
 
+    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
+        self.innerStackView1.axis = axisStyle
+        self.innerStackView2.axis = axisStyle
+    }
+    
+    /*** AUDIO ***/
+    
     @IBAction func recordAudio(sender: AnyObject) {
         //Change UI
             recordingLabel.setTitle("Recording In Progress - Tap Stop to Stop", forState: UIControlState.Normal)
@@ -87,11 +112,6 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
             try! audioSession.setActive(false)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        stopRecordingButton.enabled = false
-    }
-    
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
         //If success, segue.  Else print error
             if(flag){
@@ -100,14 +120,6 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
             else {
                 print("Saving of recording failed")
             }
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if(segue.identifier == "stopRecording"){
-            let playSoundsVC = segue.destinationViewController as! PlaySoundsViewController
-            let recordedAudioURL = sender as! NSURL
-            playSoundsVC.recordedAudioURL = recordedAudioURL
-        }
     }
 
 }

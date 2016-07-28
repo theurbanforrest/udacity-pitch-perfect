@@ -11,6 +11,8 @@ import AVFoundation
 
 class PlaySoundsViewController: UIViewController {
     
+    /******** VARIABLES ********/
+    
     //All the buttons
     @IBOutlet weak var snailButton: UIButton!
     @IBOutlet weak var chipmunkButton: UIButton!
@@ -28,6 +30,7 @@ class PlaySoundsViewController: UIViewController {
     @IBOutlet weak var innerStackView4: UIStackView!
     
     //Audio-related vars
+    var recordedAudio: NSURL!
     var recordedAudioURL: NSURL!
     var audioFile: AVAudioFile!
     var audioEngine: AVAudioEngine!
@@ -36,10 +39,56 @@ class PlaySoundsViewController: UIViewController {
     
     enum ButtonType: Int { case Slow = 0, Fast, Chipmunk, Vader, Echo, Reverb }
     
-    @IBAction func playSoundForButton(sender: UIButton) {
-        //Caveman Debug
-            print("Play Sound Button Pressed")
+    
+    /******** OVERRIDE FUNCS ********/
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupAudio()
+        setStackViewLayout()
         
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        configureUI(.NotPlaying)
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animateAlongsideTransition({ (context) -> Void in
+            
+            self.setStackViewLayout()
+            
+            }, completion: nil)
+    }
+    
+    
+    /******** HELPER FUNCS ********/
+    
+    /*** UI ***/
+    
+    func setStackViewLayout() {
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        
+        if orientation.isPortrait{
+            self.OuterStackView.axis = .Vertical
+            self.setInnerStackViewsAxis(.Horizontal)
+        } else {
+            self.OuterStackView.axis = .Horizontal
+            self.setInnerStackViewsAxis(.Vertical)
+        }
+    }
+    
+    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
+        self.innerStackView1.axis = axisStyle
+        self.innerStackView2.axis = axisStyle
+        self.innerStackView3.axis = axisStyle
+        self.innerStackView4.axis = axisStyle
+    }
+    
+    /*** AUDIO ***/
+    
+    @IBAction func playSoundForButton(sender: UIButton) {
         //Play the sound with a playback filter
         switch(ButtonType(rawValue: sender.tag)!) {
         case .Slow:
@@ -60,51 +109,8 @@ class PlaySoundsViewController: UIViewController {
     }
     
     @IBAction func stopButtonPressed(sender: AnyObject) {
-        //Caveman Debug
-        print("Stop Button Pressed")
-        
         //Stop the Audio
         stopAudio()
     }
-    
-    var recordedAudio: NSURL!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupAudio()
-
-        // Do any additional setup after loading the view.
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        configureUI(.NotPlaying)
-    }
-
-/* BEGIN udacity forums ui fix */
-    
-    // helper function: all the innerStackView should share the same style, configure them together
-    func setInnerStackViewsAxis(axisStyle: UILayoutConstraintAxis)  {
-        self.innerStackView1.axis = axisStyle
-        self.innerStackView2.axis = axisStyle
-        self.innerStackView3.axis = axisStyle
-        self.innerStackView4.axis = axisStyle
-    }
-    
-    // override this function to make sure when rotated to landscape, the buttons are not squeezed
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        coordinator.animateAlongsideTransition({ (context) -> Void in
-            let orientation = UIApplication.sharedApplication().statusBarOrientation
-            
-            if orientation.isPortrait{
-                self.OuterStackView.axis = .Vertical
-                self.setInnerStackViewsAxis(.Horizontal)
-            } else {
-                self.OuterStackView.axis = .Horizontal
-                self.setInnerStackViewsAxis(.Vertical)
-            }
-            }, completion: nil)
-    }
-/* END udacity forums ui fix */
 
 }
