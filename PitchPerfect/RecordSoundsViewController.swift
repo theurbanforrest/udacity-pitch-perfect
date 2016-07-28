@@ -89,7 +89,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     
     @IBAction func recordAudio(sender: AnyObject) {
         //Change UI
-            recordingLabel.setTitle("Recording In Progress - Tap Stop to Stop", forState: UIControlState.Normal)
+            recordingLabel.setTitle("Recording In Progress", forState: UIControlState.Normal)
             stopRecordingButton.enabled = true
             recordButton.enabled = false
 
@@ -112,7 +112,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
     @IBAction func stopRecording(sender: AnyObject) {
         
         //Change UI
-            recordingLabel.setTitle("Tap Mic to Record", forState: UIControlState.Normal)
+            recordingLabel.setTitle("Tap to Record", forState: UIControlState.Normal)
             stopRecordingButton.enabled = false
             recordButton.enabled = true
         
